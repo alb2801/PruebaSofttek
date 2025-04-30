@@ -5,83 +5,92 @@ using PruebaTecnica.API.Services.Interface;
 
 namespace PruebaTecnica.API.Controllers;
 
+/// <summary>
+/// Controlador para la gestión de libros.
+/// Permite operaciones CRUD y aplica reglas de negocio.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class LibrosController : ControllerBase
 {
     private readonly ILibroService _libroService;
 
+    /// <summary>
+    /// Constructor del controlador de libros.
+    /// </summary>
     public LibrosController(ILibroService libroService)
     {
         _libroService = libroService;
     }
 
+    /// <summary>
+    /// Obtiene todos los libros registrados.
+    /// </summary>
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LibroDTO>>> GetAll()
-    {
-        var libros = await _libroService.GetAllAsync();
-        return Ok(libros);
-    }
+    public async Task<ActionResult<IEnumerable<LibroDTO>>> GetAll() => Ok(await _libroService.GetAllAsync());
 
+    /// <summary>
+    /// Obtiene un libro por su identificador.
+    /// </summary>
+    /// <param name="id">Identificador del libro</param>
     [HttpGet("{id}")]
     public async Task<ActionResult<LibroDTO>> GetById(int id)
     {
-        try
-        {
-            var libro = await _libroService.GetByIdAsync(id);
-            return Ok(libro);
-        }
-        catch (Exception ex)
-        {
-            return NotFound(ex.Message);
-        }
+        var libro = await _libroService.GetByIdAsync(id);
+        if (libro == null) return NotFound();
+        return Ok(libro);
     }
 
+    /// <summary>
+    /// Crea un nuevo libro, validando reglas de negocio.
+    /// </summary>
+    /// <param name="dto">Datos del libro a crear</param>
     [HttpPost]
-    public async Task<ActionResult<LibroDTO>> Create(CreateLibroDTO libroDto)
+    public async Task<ActionResult<LibroDTO>> Create(CreateLibroDTO dto)
     {
         try
         {
-            var libro = await _libroService.CreateAsync(libroDto);
+            var libro = await _libroService.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = libro.Id }, libro);
         }
         catch (AutorNotFoundException ex)
         {
-            return NotFound(ex.Message);
+            return BadRequest(ex.Message);
         }
         catch (MaxLibrosExceededException ex)
         {
             return BadRequest(ex.Message);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500, "Error interno del servidor");
         }
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, CreateLibroDTO libroDto)
+    /// <summary>
+    /// Actualiza un libro existente.
+    /// </summary>
+    /// <param name="id">Identificador del libro</param>
+    /// <param name="dto">Nuevos datos del libro</param>
+    /* [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, CreateLibroDTO dto)
     {
         try
         {
-            await _libroService.UpdateAsync(id, libroDto);
+            await _libroService.UpdateAsync(id, dto);
             return NoContent();
-        }
-        catch (AutorNotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (MaxLibrosExceededException ex)
-        {
-            return BadRequest(ex.Message);
         }
         catch (Exception ex)
         {
             return NotFound(ex.Message);
         }
-    }
+    } */
 
-    [HttpDelete("{id}")]
+    /// <summary>
+    /// Elimina un libro por su identificador.
+    /// </summary>
+    /// <param name="id">Identificador del libro</param>
+    /* [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
         try
@@ -93,5 +102,5 @@ public class LibrosController : ControllerBase
         {
             return NotFound(ex.Message);
         }
-    }
+    } */
 }

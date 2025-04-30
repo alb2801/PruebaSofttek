@@ -1,5 +1,3 @@
-using AutoMapper;
-using PruebaTecnica.API.Exceptions;
 using PruebaTecnica.API.Models.DTOs.Autor;
 using PruebaTecnica.API.Models.Entities;
 using PruebaTecnica.API.Repositories.Interface;
@@ -7,63 +5,105 @@ using PruebaTecnica.API.Services.Interface;
 
 namespace PruebaTecnica.API.Services;
 
+/// <summary>
+/// Servicio para la gestión de autores, implementa operaciones CRUD y reglas de negocio.
+/// </summary>
 public class AutorService : IAutorService
 {
-    private readonly IAutorRepository _autorRepository;
-    private readonly IMapper _mapper;
+    private readonly IAutorRepository _repo;
 
-    public AutorService(IAutorRepository autorRepository, IMapper mapper)
-    {
-        _autorRepository = autorRepository;
-        _mapper = mapper;
-    }
+    /// <summary>
+    /// Constructor del servicio de autores. Inyecta el repositorio de autores.
+    /// </summary>
+    /// <param name="repo">Repositorio de autores</param>
+    public AutorService(IAutorRepository repo) => _repo = repo;
 
+    /// <summary>
+    /// Obtiene todos los autores registrados en el sistema.
+    /// </summary>
+    /// <returns>Lista de autores en formato DTO</returns>
     public async Task<IEnumerable<AutorDTO>> GetAllAsync()
     {
-        var autores = await _autorRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<AutorDTO>>(autores);
+        var autores = await _repo.GetAllAsync();
+        // Mapeo manual de entidad a DTO
+        return autores.Select(a => new AutorDTO
+        {
+            Id = a.Id,
+            NombreCompleto = a.NombreCompleto,
+            FechaNacimiento = a.FechaNacimiento,
+            CiudadProcedencia = a.CiudadProcedencia,
+            CorreoElectronico = a.CorreoElectronico
+        });
     }
 
-    public async Task<AutorDTO> GetByIdAsync(int id)
+    /// <summary>
+    /// Obtiene un autor por su identificador.
+    /// </summary>
+    /// <param name="id">Identificador del autor</param>
+    /// <returns>Autor en formato DTO o null si no existe</returns>
+    public async Task<AutorDTO?> GetByIdAsync(int id)
     {
-        var autor = await _autorRepository.GetByIdAsync(id);
-        if (autor == null)
-            throw new AutorNotFoundException();
-
-        return _mapper.Map<AutorDTO>(autor);
+        var a = await _repo.GetByIdAsync(id);
+        if (a == null) return null;
+        return new AutorDTO
+        {
+            Id = a.Id,
+            NombreCompleto = a.NombreCompleto,
+            FechaNacimiento = a.FechaNacimiento,
+            CiudadProcedencia = a.CiudadProcedencia,
+            CorreoElectronico = a.CorreoElectronico
+        };
     }
 
-    public async Task<AutorDTO> CreateAsync(CreateAutorDTO autorDto)
+    /// <summary>
+    /// Crea un nuevo autor.
+    /// </summary>
+    /// <param name="dto">DTO con los datos del autor a crear</param>
+    /// <returns>Autor creado en formato DTO</returns>
+    public async Task<AutorDTO> CreateAsync(CreateAutorDTO dto)
     {
-        var existingAutor = await _autorRepository.GetByEmailAsync(autorDto.CorreoElectronico);
-        if (existingAutor != null)
-            throw new Exception("Ya existe un autor con este correo electrónico.");
-
-        var autor = _mapper.Map<Autor>(autorDto);
-        await _autorRepository.CreateAsync(autor);
-        return _mapper.Map<AutorDTO>(autor);
+        var autor = new Autor
+        {
+            NombreCompleto = dto.NombreCompleto,
+            FechaNacimiento = dto.FechaNacimiento,
+            CiudadProcedencia = dto.CiudadProcedencia,
+            CorreoElectronico = dto.CorreoElectronico
+        };
+        var creado = await _repo.CreateAsync(autor);
+        return new AutorDTO
+        {
+            Id = creado.Id,
+            NombreCompleto = creado.NombreCompleto,
+            FechaNacimiento = creado.FechaNacimiento,
+            CiudadProcedencia = creado.CiudadProcedencia,
+            CorreoElectronico = creado.CorreoElectronico
+        };
     }
 
-    public async Task UpdateAsync(int id, CreateAutorDTO autorDto)
+    /// <summary>
+    /// Actualiza los datos de un autor existente.
+    /// </summary>
+    /// <param name="id">Identificador del autor</param>
+    /// <param name="dto">DTO con los nuevos datos</param>
+    /// <exception cref="Exception">Si el autor no existe</exception>
+    public async Task UpdateAsync(int id, CreateAutorDTO dto)
     {
-        var autor = await _autorRepository.GetByIdAsync(id);
-        if (autor == null)
-            throw new AutorNotFoundException();
-
-        var existingAutor = await _autorRepository.GetByEmailAsync(autorDto.CorreoElectronico);
-        if (existingAutor != null && existingAutor.Id != id)
-            throw new Exception("Ya existe un autor con este correo electrónico.");
-
-        _mapper.Map(autorDto, autor);
-        await _autorRepository.UpdateAsync(autor);
+        var autor = await _repo.GetByIdAsync(id) ?? throw new Exception("Autor no encontrado");
+        autor.NombreCompleto = dto.NombreCompleto;
+        autor.FechaNacimiento = dto.FechaNacimiento;
+        autor.CiudadProcedencia = dto.CiudadProcedencia;
+        autor.CorreoElectronico = dto.CorreoElectronico;
+        await _repo.UpdateAsync(autor);
     }
 
+    /// <summary>
+    /// Elimina un autor por su identificador.
+    /// </summary>
+    /// <param name="id">Identificador del autor</param>
+    /// <exception cref="Exception">Si el autor no existe</exception>
     public async Task DeleteAsync(int id)
     {
-        var autor = await _autorRepository.GetByIdAsync(id);
-        if (autor == null)
-            throw new AutorNotFoundException();
-
-        await _autorRepository.DeleteAsync(id);
+        var autor = await _repo.GetByIdAsync(id) ?? throw new Exception("Autor no encontrado");
+        await _repo.DeleteAsync(autor);
     }
 }

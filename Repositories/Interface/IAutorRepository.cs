@@ -9,6 +9,6 @@ public interface IAutorRepository
     Task<Autor?> GetByEmailAsync(string email);
     Task<Autor> CreateAsync(Autor autor);
     Task UpdateAsync(Autor autor);
-    Task DeleteAsync(int id);
+    Task DeleteAsync(Autor autor);
     Task<bool> ExistsAsync(int id);
 }

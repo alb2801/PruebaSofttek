@@ -10,5 +10,5 @@ public interface ILibroRepository
     Task<int> GetLibroCountByAutorAsync(int autorId);
     Task<Libro> CreateAsync(Libro libro);
     Task UpdateAsync(Libro libro);
-    Task DeleteAsync(int id);
+    Task DeleteAsync(Libro libro);
 }
