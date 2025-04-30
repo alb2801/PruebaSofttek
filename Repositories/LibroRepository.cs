@@ -2,31 +2,36 @@ using Microsoft.EntityFrameworkCore;
 using PruebaTecnica.API.Models.Entities;
 using PruebaTecnica.API.Repositories.Interface;
 
-namespace PruebaTecnica.API.Repositories;
-
+/// <summary>
+/// Repositorio para la gestión de libros en la base de datos.
+/// Implementa las operaciones CRUD y consultas específicas para la entidad Libro.
+/// </summary>
 public class LibroRepository : ILibroRepository
 {
     private readonly AppDbContext _context;
 
+    /// <summary>
+    /// Constructor del repositorio de libros.
+    /// </summary>
+    /// <param name="context">Contexto de base de datos de la aplicación.</param>
     public LibroRepository(AppDbContext context)
     {
         _context = context;
     }
 
-    public async Task<IEnumerable<Libro>> GetAllAsync()
-    {
-        return await _context.Libros
-            .Include(l => l.Autor)
-            .ToListAsync();
-    }
+    /// <summary>
+    /// Obtiene todos los libros registrados, incluyendo su autor.
+    /// </summary>
+    public async Task<IEnumerable<Libro>> GetAllAsync() => await _context.Libros.Include(l => l.Autor).ToListAsync();
 
-    public async Task<Libro?> GetByIdAsync(int id)
-    {
-        return await _context.Libros
-            .Include(l => l.Autor)
-            .FirstOrDefaultAsync(l => l.Id == id);
-    }
+    /// <summary>
+    /// Obtiene un libro por su identificador, incluyendo su autor.
+    /// </summary>
+    public async Task<Libro?> GetByIdAsync(int id) => await _context.Libros.Include(l => l.Autor).FirstOrDefaultAsync(l => l.Id == id);
 
+    /// <summary>
+    /// Obtiene todos los libros de un autor específico.
+    /// </summary>
     public async Task<IEnumerable<Libro>> GetByAutorIdAsync(int autorId)
     {
         return await _context.Libros
@@ -34,12 +39,18 @@ public class LibroRepository : ILibroRepository
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Obtiene la cantidad de libros registrados para un autor específico.
+    /// </summary>
     public async Task<int> GetLibroCountByAutorAsync(int autorId)
     {
         return await _context.Libros
             .CountAsync(l => l.AutorId == autorId);
     }
 
+    /// <summary>
+    /// Crea un nuevo libro en la base de datos.
+    /// </summary>
     public async Task<Libro> CreateAsync(Libro libro)
     {
         _context.Libros.Add(libro);
@@ -47,19 +58,21 @@ public class LibroRepository : ILibroRepository
         return libro;
     }
 
+    /// <summary>
+    /// Actualiza los datos de un libro existente.
+    /// </summary>
     public async Task UpdateAsync(Libro libro)
     {
-        _context.Entry(libro).State = EntityState.Modified;
+        _context.Libros.Update(libro);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    /// <summary>
+    /// Elimina un libro de la base de datos.
+    /// </summary>
+    public async Task DeleteAsync(Libro libro)
     {
-        var libro = await _context.Libros.FindAsync(id);
-        if (libro != null)
-        {
-            _context.Libros.Remove(libro);
-            await _context.SaveChangesAsync();
-        }
+        _context.Libros.Remove(libro);
+        await _context.SaveChangesAsync();
     }
 }

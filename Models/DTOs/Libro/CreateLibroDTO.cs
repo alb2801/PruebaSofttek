@@ -13,7 +13,7 @@ public class CreateLibroDTO
     public int Año { get; set; }
     
     [Required(ErrorMessage = "El género es obligatorio")]
-    public Genero Genero { get; set; }
+    public int Genero { get; set; }
     
     [Required(ErrorMessage = "El número de páginas es obligatorio")]
     [Range(1, int.MaxValue)]

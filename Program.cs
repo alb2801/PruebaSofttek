@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using PruebaTecnica.API.Repositories;
 using PruebaTecnica.API.Repositories.Interface;
 using PruebaTecnica.API.Services;
 using PruebaTecnica.API.Services.Interface;
@@ -15,9 +14,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
-
-// AutoMapper
-builder.Services.AddAutoMapper(typeof(Program));
 
 // Repositories
 builder.Services.AddScoped<IAutorRepository, AutorRepository>();
