@@ -22,4 +22,16 @@ namespace PruebaFront.Models.DTOs
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un autor")]
         public int AutorId { get; set; }
     }
+
+     // DTO para mostrar los datos de los libros en la tabla
+    public class LibroTablaDto
+    {
+        public int Id { get; set; }
+        public string Titulo { get; set; } = string.Empty;
+        public int Año { get; set; }
+        public string Genero { get; set; } = string.Empty;
+        public int NumeroPaginas { get; set; }
+        public int AutorId { get; set; }
+        public string AutorNombre { get; set; } = string.Empty;
+    }
 }

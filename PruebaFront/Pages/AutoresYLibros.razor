@@ -70,27 +70,6 @@ else
 }
 
 @code {
-    // DTO para mostrar los datos de los autores en la tabla
-    public class AutorTablaDto
-    {
-        public int Id { get; set; }
-        public string NombreCompleto { get; set; } = string.Empty;
-        public DateTime FechaNacimiento { get; set; }
-        public string? CiudadProcedencia { get; set; }
-        public string CorreoElectronico { get; set; } = string.Empty;
-    }
-
-    // DTO para mostrar los datos de los libros en la tabla
-    public class LibroTablaDto
-    {
-        public int Id { get; set; }
-        public string Titulo { get; set; } = string.Empty;
-        public int Año { get; set; }
-        public string Genero { get; set; } = string.Empty;
-        public int NumeroPaginas { get; set; }
-        public int AutorId { get; set; }
-        public string AutorNombre { get; set; } = string.Empty;
-    }
 
     // Listas que almacenan los datos obtenidos del backend
     List<AutorTablaDto> autores = new();
