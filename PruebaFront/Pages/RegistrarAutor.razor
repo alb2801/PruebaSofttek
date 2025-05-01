@@ -35,7 +35,7 @@
         @* Mensaje de feedback para el usuario *@
         @if (!string.IsNullOrEmpty(mensaje))
         {
-            <div class="alert alert-info mt-3">@mensaje</div>
+            <div class="alert @(mensaje.Contains("Error") || mensaje.Contains("error") ? "alert-danger" : "alert-success") mt-3">@mensaje</div>
         }
     </div>
 </div>
