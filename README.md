@@ -96,6 +96,21 @@ Se realizaron pruebas manuales para validar la funcionalidad y el manejo de erro
 - No se permite registrar un libro si el autor no existe.
 - Validaciones de integridad y formato en todos los campos.
 
+### Restricciones de los campos
+
+#### Autor
+- **Nombre completo:** obligatorio, máximo 100 caracteres.
+- **Fecha de nacimiento:** obligatoria, debe estar entre 1900 y 2024.
+- **Ciudad de procedencia:** opcional, máximo 100 caracteres.
+- **Correo electrónico:** obligatorio, formato válido y máximo 100 caracteres.
+
+#### Libro
+- **Título:** obligatorio, máximo 200 caracteres.
+- **Año:** obligatorio, debe estar entre 1500 y 2024.
+- **Género:** obligatorio (debe seleccionarse, no puede ser 0).
+- **Número de páginas:** obligatorio, mayor a 0.
+- **Autor:** obligatorio (debe seleccionarse, no puede ser 0).
+
 ---
 
 ## Notas Técnicas
@@ -108,10 +123,37 @@ Se realizaron pruebas manuales para validar la funcionalidad y el manejo de erro
 
 ---
 
+## Consideraciones y Limitaciones
+
+- El frontend no incluye edición ni eliminación de registros (solo alta y consulta).
+- El sistema asume que la base de datos está correctamente configurada y migrada.
+- Las validaciones de fechas se realizan manualmente en el frontend para evitar problemas de formato con DataAnnotations.
+- El máximo de libros por autor está configurado en el backend y puede modificarse en la configuración.
+
+---
+
+## Probar la API
+
+El backend expone Swagger para pruebas manuales de los endpoints:
+- Accede a [http://localhost:5178/swagger](http://localhost:5178/swagger) para ver y probar los endpoints de la API.
+
+---
+
+## Tecnologías Utilizadas
+
+- .NET 6 (C#)
+- ASP.NET Core Web API
+- Entity Framework Core
+- SQL Server
+- Blazor WebAssembly
+- Bootstrap 5
+
+---
+
 ## Contacto
 
-Desarrollado por: _[Alberth Yecid Cifuentes Pulgarin]_  
-Correo: _[alberthpulgarin@gmail.com]_  
+Desarrollado por: _Alberth Yecid Cifuentes Pulgarin_  
+Correo: _alberthpulgarin@gmail.com_  
 Año: 2025
 
 ---
