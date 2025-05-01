@@ -120,6 +120,16 @@ Se realizaron pruebas manuales para validar la funcionalidad y el manejo de erro
 - **Validaciones** en backend y frontend usando DataAnnotations y validación manual donde es necesario.
 - **Manejo de excepciones** y mensajes claros para el usuario.
 - **Estructura limpia y modular** siguiendo buenas prácticas de .NET.
+- **Configuración del máximo de libros por autor:** El valor se define en `appsettings.json` bajo la clave `MaxLibrosPorAutor` (por defecto es 3).
+- **Uso de URLs relativas en el frontend:** Se recomienda configurar correctamente el `BaseAddress` de `HttpClient` para evitar problemas al cambiar de entorno.
+- **DTOs en el frontend:** Los modelos de datos usados en los componentes Blazor deben estar en la carpeta `Models/DTOs` para facilitar la reutilización y el mantenimiento.
+- **Manejo de errores y feedback visual:** El frontend maneja errores de red y muestra mensajes claros al usuario. Se recomienda implementar feedback visual (spinners, mensajes de carga) para mejorar la experiencia de usuario.
+- **Mejoras futuras:** Para grandes volúmenes de datos, se recomienda implementar paginación o carga progresiva en las tablas.
+- **Seguridad y validaciones:** Aunque existen validaciones en el frontend, la integridad y seguridad de los datos siempre se garantiza en el backend.
+
+> **Nota sobre el registro de libros:**  
+> En la interfaz de usuario para registrar un libro, se muestra una lista desplegable con los autores ya registrados, lo que evita que el usuario intente asociar un libro a un autor inexistente.  
+> Sin embargo, la validación en el backend permanece activa para garantizar la integridad de los datos, incluso si se intenta registrar un libro con un autor no existente mediante herramientas como Swagger u otros clientes externos.
 
 ---
 

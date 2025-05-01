@@ -25,4 +25,14 @@ namespace PruebaFront.Models.DTOs
         public int Id { get; set; }
         public string NombreCompleto { get; set; } = string.Empty;
     }
+
+    // DTO para mostrar los datos de los autores en la tabla
+    public class AutorTablaDto
+    {
+        public int Id { get; set; }
+        public string NombreCompleto { get; set; } = string.Empty;
+        public DateTime FechaNacimiento { get; set; }
+        public string? CiudadProcedencia { get; set; }
+        public string CorreoElectronico { get; set; } = string.Empty;
+    }
 }

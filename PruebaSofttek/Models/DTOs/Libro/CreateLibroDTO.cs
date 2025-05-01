@@ -9,7 +9,7 @@ public class CreateLibroDTO
     public string Titulo { get; set; } = null!;
     
     [Required(ErrorMessage = "El año es obligatorio")]
-    [Range(1000, 9999)]
+    [Range(1500, 2024)]
     public int Año { get; set; }
     
     [Required(ErrorMessage = "El género es obligatorio")]
