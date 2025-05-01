@@ -1,0 +1,78 @@
+@page "/registrar-autor"
+@* Página para registrar un nuevo autor. Valida los campos y muestra mensajes de éxito o error. *@
+@using PruebaFront.Models
+@using PruebaFront.Models.DTOs
+@inject HttpClient Http
+
+<h1 class="d-flex justify-content-center mb-4">Registrar Autor</h1>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow-sm p-4" style="max-width: 500px;">
+        @* Formulario para registrar un autor *@
+        <EditForm Model="@autor" OnValidSubmit="RegistrarAutorAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label">Nombre completo <span class="text-danger">*</span></label>
+                <InputText @bind-Value="autor.NombreCompleto" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Fecha de nacimiento <span class="text-danger">*</span></label>
+                <InputDate @bind-Value="autor.FechaNacimiento" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ciudad de procedencia</label>
+                <InputText @bind-Value="autor.CiudadProcedencia" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Correo electrónico <span class="text-danger">*</span></label>
+                <InputText @bind-Value="autor.CorreoElectronico" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Registrar</button>
+        </EditForm>
+
+        @* Mensaje de feedback para el usuario *@
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="alert alert-info mt-3">@mensaje</div>
+        }
+    </div>
+</div>
+
+@code {
+    // DTO que almacena los datos del autor a registrar
+    AutorDto autor = new AutorDto
+    {
+        FechaNacimiento = new DateTime(2000, 1, 1)
+    };
+
+    // Mensaje para mostrar feedback al usuario
+    string? mensaje;
+
+    // Envía el autor al backend y muestra el resultado
+    private async Task RegistrarAutorAsync()
+    {
+        // Validación manual de la fecha de nacimiento
+        if (autor.FechaNacimiento < new DateTime(1900, 1, 1) || autor.FechaNacimiento > new DateTime(2024, 12, 31))
+        {
+            mensaje = "La fecha debe ser entre 1900 y 2024";
+            return;
+        }
+
+        var response = await Http.PostAsJsonAsync("http://localhost:5178/api/Autores", autor);
+        if (response.IsSuccessStatusCode)
+        {
+            mensaje = "Autor registrado correctamente.";
+            // Limpiar formulario y reiniciar fecha por defecto
+            autor = new AutorDto
+            {
+                FechaNacimiento = new DateTime(2000, 1, 1)
+            };
+        }
+        else
+        {
+            mensaje = "Error al registrar el autor.";
+        }
+    }
+}

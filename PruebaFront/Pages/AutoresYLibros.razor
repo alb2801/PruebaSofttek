@@ -1,0 +1,125 @@
+@page "/autores-libros"
+@* Página para mostrar las tablas de autores y libros registrados. *@
+@using PruebaFront.Models.DTOs
+@inject HttpClient Http
+
+<h2 class="text-center mb-4">Autores Registrados</h2>
+@if (autores is not null && autores.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre Completo</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Ciudad de Procedencia</th>
+                <th>Correo Electrónico</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var autor in autores)
+            {
+                <tr>
+                    <td>@autor.Id</td>
+                    <td>@autor.NombreCompleto</td>
+                    <td>@autor.FechaNacimiento.ToShortDateString()</td>
+                    <td>@autor.CiudadProcedencia</td>
+                    <td>@autor.CorreoElectronico</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay autores registrados.</p>
+}
+
+<h2 class="text-center mb-4">Libros Registrados</h2>
+@if (libros is not null && libros.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Título</th>
+                <th>Año</th>
+                <th>Género</th>
+                <th>Número de Páginas</th>
+                <th>Autor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var libro in libros)
+            {
+                <tr>
+                    <td>@libro.Id</td>
+                    <td>@libro.Titulo</td>
+                    <td>@libro.Año</td>
+                    <td>@libro.Genero</td>
+                    <td>@libro.NumeroPaginas</td>
+                    <td>@libro.AutorNombre</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No hay libros registrados.</p>
+}
+
+@code {
+    // DTO para mostrar los datos de los autores en la tabla
+    public class AutorTablaDto
+    {
+        public int Id { get; set; }
+        public string NombreCompleto { get; set; } = string.Empty;
+        public DateTime FechaNacimiento { get; set; }
+        public string? CiudadProcedencia { get; set; }
+        public string CorreoElectronico { get; set; } = string.Empty;
+    }
+
+    // DTO para mostrar los datos de los libros en la tabla
+    public class LibroTablaDto
+    {
+        public int Id { get; set; }
+        public string Titulo { get; set; } = string.Empty;
+        public int Año { get; set; }
+        public string Genero { get; set; } = string.Empty;
+        public int NumeroPaginas { get; set; }
+        public int AutorId { get; set; }
+        public string AutorNombre { get; set; } = string.Empty;
+    }
+
+    // Listas que almacenan los datos obtenidos del backend
+    List<AutorTablaDto> autores = new();
+    List<LibroTablaDto> libros = new();
+
+    // Al inicializar la página, se obtienen los autores y libros del backend
+    protected override async Task OnInitializedAsync()
+    {
+        autores = await Http.GetFromJsonAsync<List<AutorTablaDto>>("http://localhost:5178/api/Autores") ?? new();
+        libros = await Http.GetFromJsonAsync<List<LibroTablaDto>>("http://localhost:5178/api/Libros") ?? new();
+    }
+
+    // Métodos auxiliares (no usados actualmente, pero útiles si se requiere mostrar el nombre del género o autor por id)
+    private string ObtenerGeneroNombre(int genero)
+    {
+        return genero switch
+        {
+            1 => "Ciencia Ficción",
+            2 => "Fantasía",
+            3 => "Romance",
+            4 => "Terror",
+            5 => "Histórico",
+            _ => "Desconocido"
+        };
+    }
+
+    private string ObtenerNombreAutor(int autorId)
+    {
+        var autor = autores.FirstOrDefault(a => a.Id == autorId);
+        return autor?.NombreCompleto ?? "Desconocido";
+    }
+}

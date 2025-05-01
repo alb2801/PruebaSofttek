@@ -1,0 +1,108 @@
+@page "/registrar-libro"
+@* Página para registrar un nuevo libro. Valida los campos y muestra mensajes de éxito o error. *@
+@using PruebaFront.Models
+@using PruebaFront.Models.DTOs
+@inject HttpClient Http
+
+<h1 class="d-flex justify-content-center mb-4">Registrar Libro</h1>
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="card shadow-sm p-4" style="max-width: 500px;">
+        <EditForm Model="@libro" OnValidSubmit="RegistrarLibroAsync">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label class="form-label">Título <span class="text-danger">*</span></label>
+                <InputText @bind-Value="libro.Titulo" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Año <span class="text-danger">*</span></label>
+                <InputNumber @bind-Value="libro.Año" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Género <span class="text-danger">*</span></label>
+                <InputSelect @bind-Value="libro.Genero" class="form-control">
+                    <option value="0">Seleccione un género</option>
+                    <option value="1">Ciencia Ficción</option>
+                    <option value="2">Fantasía</option>
+                    <option value="3">Romance</option>
+                    <option value="4">Terror</option>
+                    <option value="5">Histórico</option>
+                </InputSelect>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Número de páginas <span class="text-danger">*</span></label>
+                <InputNumber @bind-Value="libro.NumeroPaginas" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Autor <span class="text-danger">*</span></label>
+                <InputSelect @bind-Value="libro.AutorId" class="form-control">
+                    <option value="0">Seleccione un autor</option>
+                    @foreach (var autor in autores)
+                    {
+                        <option value="@autor.Id">@autor.NombreCompleto</option>
+                    }
+                </InputSelect>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Registrar</button>
+        </EditForm>
+
+        @if (!string.IsNullOrEmpty(mensaje))
+        {
+            <div class="alert @(mensaje.Contains("Error") ? "alert-danger" : "alert-success") mt-3">@mensaje</div>
+        }
+    </div>
+</div>
+
+@code {
+    // DTO que almacena los datos del libro a registrar
+    LibroDto libro = new LibroDto
+    {
+        Genero = 0,
+        AutorId = 0,
+        Año = 1500,
+        NumeroPaginas = 1
+    };
+
+    // Mensaje para mostrar feedback al usuario
+    string? mensaje;
+
+    // Lista de autores para el select
+    List<AutorItem> autores = new();
+
+    // Carga la lista de autores al inicializar la página
+    protected override async Task OnInitializedAsync()
+    {
+        autores = await Http.GetFromJsonAsync<List<AutorItem>>("http://localhost:5178/api/Autores") ?? new();
+    }
+
+    // Envía el libro al backend y muestra el resultado
+    private async Task RegistrarLibroAsync()
+    {
+        var response = await Http.PostAsJsonAsync("http://localhost:5178/api/Libros", libro);
+        if (response.IsSuccessStatusCode)
+        {
+            mensaje = "Libro registrado correctamente.";
+            libro = new LibroDto
+            {
+                Genero = 0,
+                AutorId = 0,
+                Año = 1500,
+                NumeroPaginas = 1
+            }; // Limpiar formulario
+        }
+        else
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            mensaje = $"Error: {error}";
+        }
+    }
+
+    // Clase auxiliar para mostrar autores en el select
+    public class AutorItem
+    {
+        public int Id { get; set; }
+        public string NombreCompleto { get; set; } = string.Empty;
+    }
+}
