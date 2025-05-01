@@ -5,6 +5,16 @@ using PruebaTecnica.API.Services.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Agrega la política de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirBlazor",
+        policy => policy
+            .WithOrigins("https://localhost:5001", "http://localhost:5000") // Cambia los puertos según los que use tu Blazor
+            .AllowAnyHeader()
+            .AllowAnyMethod());
+});
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
@@ -24,6 +34,9 @@ builder.Services.AddScoped<IAutorService, AutorService>();
 builder.Services.AddScoped<ILibroService, LibroService>();
 
 var app = builder.Build();
+
+// Usa la política de CORS
+app.UseCors("PermitirBlazor");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
