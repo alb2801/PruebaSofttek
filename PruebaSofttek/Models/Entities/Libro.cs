@@ -23,7 +23,7 @@ public class Libro {
     /// Año de publicación del libro. Obligatorio.
     /// </summary>
     [Required(ErrorMessage = "El año es obligatorio")]
-    [Range(1000, 9999, ErrorMessage = "El año debe estar entre 1000 y 9999")]
+    [Range(1500, 2024, ErrorMessage = "El año debe estar entre 1500 y 2024")]
     public int Año { get; set; }
 
     /// <summary>

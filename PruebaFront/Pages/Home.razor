@@ -1,7 +1,41 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Inicio</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Bienvenido a la Prueba Técnica .NET</h1>
 
-Welcome to your new app.
+<p>Selecciona una opción para comenzar:</p>
+
+<div class="d-flex flex-column flex-md-row gap-3 mt-4">
+    <NavLink class="btn btn-primary btn-lg home-btn" href="registrar-autor">
+        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span>
+        Registrar Autor
+    </NavLink>
+    <NavLink class="btn btn-primary btn-lg home-btn" href="registrar-libro">
+        <span class="bi bi-book-fill-nav-menu" aria-hidden="true"></span>
+        Registrar Libro
+    </NavLink>
+    <NavLink class="btn btn-primary btn-lg home-btn" href="autores-libros">
+        <span class="bi bi-card-list-nav-menu" aria-hidden="true"></span>
+        Autores y Libros
+    </NavLink>
+</div>
+
+<style>
+    .btn-lg.home-btn {
+        min-width: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        font-weight: 500;
+        font-size: 1.2rem;
+        transition: background 0.2s, color 0.2s;
+    }
+    .btn-lg.home-btn:hover, .btn-lg.home-btn:focus {
+        background: #f0f0f0;
+        color: #222 !important;
+    }
+</style>
