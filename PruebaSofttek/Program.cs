@@ -10,7 +10,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("PermitirBlazor",
         policy => policy
-            .WithOrigins("https://localhost:5001", "http://localhost:5000") // Cambia los puertos según los que use tu Blazor
+            .WithOrigins("https://localhost:5022", "http://localhost:5022") // Cambia los puertos según los que use tu Blazor
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
