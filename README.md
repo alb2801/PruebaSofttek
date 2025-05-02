@@ -8,7 +8,7 @@ Permite registrar y consultar autores y libros, cumpliendo reglas de negocio esp
 ---
 
 ## Diagrama de Clases
-> ![Diagrama de Clases](Docs/Prueba_Softtek.png)
+> ![Diagrama de Clases](Docs/Diagrama_Clase.png)
 
 ---
 
@@ -63,6 +63,43 @@ PruebaFront/             # Frontend (Blazor WebAssembly)
    ```
 6. **Accede a la aplicación Blazor** en tu navegador (por ejemplo, http://localhost:5000).
 
+---
+
+## Evidencias de la Interfaz
+
+A continuación se muestran capturas de pantalla de la aplicación web, evidenciando las principales funcionalidades y validaciones:
+
+### 1. Validación de campos obligatorios
+![Validación de campos obligatorios en registrar un autor](Docs/Autor.png)
+
+![Validación de campos obligatorios en registrar un libro](Docs/Libro.png)
+
+### 2. Creación exitosa de un autor y un libro
+
+**a) Datos ingresados en el formulario de autor:**
+*Se muestra el formulario de registro de autor con los campos llenos.*
+![Datos ingresados](Docs/Autor_Datos.png)
+
+**b) Mensaje de creación exitosa de autor:**
+*Mensaje verde indicando que el autor fue registrado correctamente.*
+![Creación exitosa](Docs/Autor_Correc.png)
+
+**c) Datos ingresados en el formulario de libro:**
+*Se muestra el formulario de registro de un libro con los campos llenos.*
+![Datos ingresados](Docs/Datos_libro.png)
+
+**d) Mensaje de creación exitosa de libro:**
+*Mensaje verde indicando que el libro fue registrado correctamente.*
+![Creación exitosa](Docs/Correcto.png)
+
+### 3. Visualización de autores y libros registrados
+![Libros registrados](Docs/Visualizacion.png)
+
+### 4. Lista de autores en el registro de un libro
+![Lista de autores](Docs/Libro_List_Autor.png)
+
+### 5. Mensaje de excepción por regla de negocio
+![Excepción por regla de negocio](Docs/Error_Max_Cant.png)
 ---
 
 ## Pruebas Realizadas en el Frontend
